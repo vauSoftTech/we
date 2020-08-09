@@ -27,8 +27,8 @@
 from datetime import datetime, timedelta
 
 prompt_text_event_type = """
-WELCOME TO EARTH WOBBLING CALCULATOR PROGRAM
-============================================
+WELCOME TO STUDY OF WOBBLING OF EARTH PROGRAM
+=============================================
 Please select event type you want to calculate wobbling for
 a.) Summer Equinox
 b.) Summer Solstice
@@ -85,7 +85,8 @@ def accept_string_data_from_the_user(prompt, default, allowed_values):
     print(prompt)
     data = ""
     while data == "":
-        data = input("> ").upper()
+        data = str(input("> "))
+        data = data.upper()
         if data == "":
             data = default
         else:
@@ -133,8 +134,9 @@ def perform_calculations(uc_event, uc_noy, uc_st_y, uc_s_e):
         exit()
 
     lst = []
-    with open("result.txt", "w") as out_f:
-        out_f.write("DATE&TIME,Year,TIME,AZIMUTH\n")
+    out_file_name = "output/{}_{}_yr_from_{}_to_{}.csv".format(uc_event, uc_s_e, uc_st_y, uc_st_y + uc_noy)
+    with open(out_file_name, "w") as out_f:
+        out_f.write("DATE&TIME, YEAR,TIME,AZIMUTH\n")
         for a_yr_no in range(uc_st_y, uc_st_y + uc_noy + 1):
             event_dt_tm = event_type_func_to_call(str(a_yr_no))
             place.date = event_dt_tm
@@ -143,7 +145,7 @@ def perform_calculations(uc_event, uc_noy, uc_st_y, uc_s_e):
             place.date = sun_event_dt_tm
             my_sun.compute(place)
             lst.append((ep.localtime(sun_event_dt_tm), my_sun.az))
-            out_f.write("{0:%Y-%m-%d %X}, {0:%Y},{0:%X},{1:}\n".format(ep.localtime(sun_event_dt_tm), my_sun.az))
+            out_f.write("{0:%Y-%m-%d %X}, {0:%Y}, {0:%X}, {1:}\n".format(ep.localtime(sun_event_dt_tm), my_sun.az))
             print(ep.localtime(sun_event_dt_tm), my_sun.az)
 
         out_f.write("Minimum\n")
@@ -167,7 +169,7 @@ def main():
             user_choice_number_of_years = 500
             user_choice_number_of_years = accept_numeric_data_from_the_user(prompt_text_number_of_years,
                                                                             user_choice_number_of_years, 10, 999)
-            print(user_choice_number_of_years)
+            # print(user_choice_number_of_years)
 
             while True:
                 global prompt_text_starting_year
@@ -177,7 +179,7 @@ def main():
                                                                                     2))).year
                 user_choice_starting_year = accept_numeric_data_from_the_user(prompt_text_starting_year,
                                                                               user_choice_starting_year, 100, 3000)
-                print(user_choice_starting_year)
+                # print(user_choice_starting_year)
 
                 while True:
                     global prompt_text_sun_event_type
